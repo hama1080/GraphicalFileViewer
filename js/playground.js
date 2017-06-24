@@ -35,13 +35,38 @@ function handleFileSelect2(evt)
     }else if(item.webkitGetAsEntry){    //webkit
       entry = item.webkitGetAsEntry();
     }
-    console.log(entry);
+    ParseEntry(entry);
   }else{
     console.log("no item");
   }
 
 }
 
+//When run on local server, this function doesn't perform.
+function ParseEntry(entry)
+{
+  if(entry.isFile){
+    console.log(entry);
+    console.log(entry.name);
+    return;
+  }else if (entry.isDirectory) {
+    var reader = entry.createReader();
+    reader.readEntries(
+      //success
+      function(results){
+        for(var i = 0; i != results.length; i++){
+          ParseEntry(results[i]);
+        }
+      },
+      //error
+      function(error){
+        console.log(error);
+        console.log("reading error");
+      }
+    );
+    return;
+  }
+}
 function handleDragOver(evt)
 {
   evt.stopPropagation();
