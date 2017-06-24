@@ -19,11 +19,25 @@ function handleFileSelect2(evt)
 {
   evt.stopPropagation();
   evt.preventDefault();
-  var files = evt.dataTransfer.files;
+  var dataTransfer = evt.dataTransfer;
 
-  for(var i =0, f; f = files[i]; i++)
+  if(dataTransfer && dataTransfer.items)
   {
-    console.log(f);
+    var items = dataTransfer.items;
+    if(items.length > 1){
+      console.log("please select one folder.")
+      return;
+    }
+    var item = items[0], entry;
+
+    if(item.getAsEntry){    // HTML5
+      entry = item.getAsEntry();
+    }else if(item.webkitGetAsEntry){    //webkit
+      entry = item.webkitGetAsEntry();
+    }
+    console.log(entry);
+  }else{
+    console.log("no item");
   }
 
 }
