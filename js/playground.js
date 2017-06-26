@@ -15,6 +15,7 @@ function handleFileSelect1(evt)
   }
 }
 
+var file_array = [];
 function handleFileSelect2(evt)
 {
   evt.stopPropagation();
@@ -35,7 +36,7 @@ function handleFileSelect2(evt)
     }else if(item.webkitGetAsEntry){    //webkit
       entry = item.webkitGetAsEntry();
     }
-    ParseEntry(entry);
+    ParseEntry(entry, file_array);
   }else{
     console.log("no item");
   }
@@ -43,11 +44,10 @@ function handleFileSelect2(evt)
 }
 
 //When run on local server, this function doesn't perform.
-function ParseEntry(entry)
+function ParseEntry(entry, file_array)
 {
   if(entry.isFile){
-    console.log(entry);
-    console.log(entry.name);
+    file_array.push(entry.name);
     return;
   }else if (entry.isDirectory) {
     var reader = entry.createReader();
@@ -55,7 +55,7 @@ function ParseEntry(entry)
       //success
       function(results){
         for(var i = 0; i != results.length; i++){
-          ParseEntry(results[i]);
+          ParseEntry(results[i], file_array);
         }
       },
       //error
