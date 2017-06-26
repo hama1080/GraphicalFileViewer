@@ -74,6 +74,12 @@ function handleDragOver(evt)
   evt.dataTransfer.dropEffect = 'copy';
 }
 
+function button0Click()
+{
+  for(var i = 0; i != file_array.length; i++)
+    console.log(file_array[i]);
+}
+
 //select file
 document.getElementById('files').addEventListener('change', handleFileSelect1, false);
 
