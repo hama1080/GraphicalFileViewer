@@ -42,4 +42,10 @@ var init = function(){
   update();
 }
 
+onWindowResize = function()
+{
+  console.log("resize");
+}
+
 window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('resize', onWindowResize);
