@@ -1,12 +1,17 @@
+var camera;
+var container;
+var renderer;
+
 var init = function(){
-  var renderer = new THREE.WebGLRenderer();
+  renderer = new THREE.WebGLRenderer();
   const kWindowWidth = 800;
   const kWindowHeight = 600;
   renderer.setSize(kWindowWidth, kWindowHeight);
-  document.body.appendChild(renderer.domElement);
+  container = document.getElementById("container");
+  container.appendChild(renderer.domElement);
 
   var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(45, kWindowWidth/ kWindowHeight, 1, 1000);
+  camera = new THREE.PerspectiveCamera(45, kWindowWidth/ kWindowHeight, 1, 1000);
 
   var geometry = new THREE.BoxGeometry(1,1,1);
   var material = new THREE.MeshPhongMaterial({color: 0x00ffff});
@@ -22,6 +27,7 @@ var init = function(){
   var light = new THREE.DirectionalLight(0xffffff);
   scene.add(light);
   light.position.set(1,1,1);
+  onWindowResize();
 
   var cnt = 0;
   var update = function(){
@@ -42,9 +48,33 @@ var init = function(){
   update();
 }
 
+// full screen: reference: http://www.inazumatv.com/contents/archives/8484
+var MIN_WIDTH = 1280, MIN_HEIGHT = 640;
+filterWindowSize = function (size){
+    var w = size.width, h = size.height;
+    return {
+        width: w <  MIN_WIDTH ? MIN_WIDTH : w,
+        height: h < MIN_HEIGHT ? MIN_HEIGHT: h
+    };
+};
+
+getWindowSize = function () {
+    return {
+        width: window.innerWidth,
+        height: window.innerHeight
+    };
+};
+
 onWindowResize = function()
 {
-  console.log("resize");
+  var size = filterWindowSize(getWindowSize());
+  console.log(size);
+
+  container.style.cssText = "width: " + size.width +"px; height: " + size.height + "px;";
+  renderer.setSize(size.width, size.height);
+
+  camera.aspect = size.width / size.height;
+  camera.updateProjectionMatrix();
 }
 
 window.addEventListener('DOMContentLoaded', init);
